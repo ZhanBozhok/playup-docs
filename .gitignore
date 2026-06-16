@@ -1,0 +1,33 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors / IDE
+.vscode/
+.idea/
+*.swp
+
+# Node / JS (для будущих client-app и admin-app)
+node_modules/
+dist/
+build/
+.next/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Python (если backend на Python)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Misc
+*.tmp
