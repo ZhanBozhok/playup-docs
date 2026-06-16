@@ -32,3 +32,7 @@
 - `22_development_checklist.md`
 - `23_seed_data_and_test_cases.md`
 - `24_open_questions_and_decisions.md`
+
+## Дизайн-система
+
+- `25_playup_design_system_style.md`
