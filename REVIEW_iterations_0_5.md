@@ -107,6 +107,28 @@ Severity: medium.
 
 Итог: ручной тест `EVENT_FULL` проходит последовательно, но при реальной одновременной записи можно получить `booked_count > capacity`.
 
+## Resolution (2026-06-16)
+
+Исправлено и проверено (curl):
+
+- **#1** — при перезаписи после paid+cancel связанная income-транзакция снимается
+  (`bookings.ts`: `deleteMany` по `paymentId` после сброса payment в unpaid). Проверено:
+  revenue 2400→1200 после cancel+rebook, payment Quinn = unpaid.
+- **#2** — `setAttendanceBulk`/`setPaymentsBulk` требуют активный Booking участника и
+  проставляют `bookingId`; для не-участника → 400.
+- **#3** — `paid` без cashbox → 400 (`payments.ts` валидация до применения).
+- **#4** — клиентская карточка отдаёт non-published событие записанному пользователю
+  (200, status cancelled), посторонний → 404; Home показывает отменённое; client UI
+  выводит «Событие отменено».
+- **#6** — создание booking обёрнуто в Serializable-транзакцию (защита от гонки capacity).
+
+Принято как осознанный компромисс MVP (не исправляется сейчас):
+
+- **#5** — refund снимает income-транзакцию (итоги корректны). Отдельная корректирующая
+  expense-транзакция «Refund» с аудит-следом — кандидат на доработку в финансах.
+
+Low-priority notes ниже не трогаем (viewer-роль и transfer пока не используются).
+
 ## Low-priority notes
 
 - `requireAdmin` отсекает только роль `client`; если когда-нибудь появится admin user с ролью `viewer`, backend даст ему write-доступ. В `18` viewer заложен на будущее, поэтому сейчас это не blocker, но лучше не забыть перед добавлением viewer.
